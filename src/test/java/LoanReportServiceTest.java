@@ -63,4 +63,27 @@ public class LoanReportServiceTest {
         assertEquals(7L, result.get("Riverside"));
         assertEquals(5L, result.get("Hillside"));
     }
+
+    @Test
+    void shouldNotReturnBookWhenReturnedOnTargetDate() {
+
+        Loan loan = new Loan(
+                "L999",
+                "M999",
+                "Test User",
+                "Central",
+                "Test Book",
+                "Test",
+                LocalDate.of(2026,4,1),
+                LocalDate.of(2026,4,21),
+                LocalDate.of(2026,4,21)
+        );
+
+        List<Loan> result =
+                service.getBooksOnLoanForDate(
+                        List.of(loan),
+                        LocalDate.of(2026,4,21));
+
+        assertEquals(0, result.size());
+    }
 }
