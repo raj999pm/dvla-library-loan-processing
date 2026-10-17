@@ -37,5 +37,29 @@ public class Application {
                                 + loan.memberName()
                                 + " | "
                                 + loan.branch()));
+
+
+        System.out.println("\nOutstanding Loans");
+
+        service.getOutstandingLoans(loans)
+                .forEach(loan ->
+                        System.out.println(
+                                loan.loanId()
+                                        + " | "
+                                        + loan.title()
+                                        + " | "
+                                        + loan.memberName()
+                                        + " | "
+                                        + loan.branch()
+                                        + " | "
+                                        + loan.dueDate()));
+
+
+        System.out.println("\nLoans Per Branch");
+
+        service.getLoanCountPerBranch(loans)
+                .forEach((branch, count) ->
+                        System.out.println(
+                                branch + " : " + count));
     }
 }
