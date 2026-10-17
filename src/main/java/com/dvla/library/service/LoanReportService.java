@@ -12,7 +12,17 @@ public class LoanReportService {
             List<Loan> loans,
             LocalDate targetDate) {
 
-        return List.of();
+        return loans.stream()
+                .filter(loan ->
+                        !loan.loanDate().isAfter(targetDate)
+                                &&
+                                (
+                                        loan.returnedDate() == null
+                                                ||
+                                                loan.returnedDate()
+                                                        .isAfter(targetDate)
+                                ))
+                .toList();
     }
 
     public List<Loan> getOutstandingLoans(
