@@ -53,7 +53,15 @@ public class LoanXmlParser {
                                             "returned_date"))
                     );
 
-                    loans.add(loan);
+                    if (isValidLoan(loan)) {
+
+                        loans.add(loan);
+
+                    } else {
+
+                        System.err.println(
+                                "Skipping invalid loan record ");
+                    }
 
                 } catch (Exception ex) {
 
@@ -70,6 +78,45 @@ public class LoanXmlParser {
         }
 
         return loans;
+    }
+
+    private boolean isValidLoan(Loan loan) {
+
+        if (loan.loanId() == null || loan.loanId().isBlank()) {
+            return false;
+        }
+
+        if (loan.memberName() == null || loan.memberName().isBlank()) {
+            return false;
+        }
+
+        if (loan.branch() == null || loan.branch().isBlank()) {
+            return false;
+        }
+
+        if (loan.title() == null || loan.title().isBlank()) {
+            return false;
+        }
+
+        if (loan.loanDate() == null) {
+            return false;
+        }
+
+        if (loan.dueDate() == null) {
+            return false;
+        }
+
+        if (loan.dueDate().isBefore(loan.loanDate())) {
+            return false;
+        }
+
+
+        if (loan.returnedDate() != null
+                && loan.returnedDate().isBefore(loan.loanDate())) {
+            return false;
+        }
+
+        return true;
     }
 
     private String getValue(
