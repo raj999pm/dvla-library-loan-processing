@@ -28,6 +28,8 @@ public class Application {
                         loans,
                         targetDate);
 
+        System.out.println("Books On Loan - 2026-04-21");
+
         activeLoans.forEach(loan ->
                 System.out.println(
                         loan.loanId()
