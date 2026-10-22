@@ -1,4 +1,4 @@
-import com.dvla.library.model.Close;
+import com.dvla.library.model.Closure;
 import com.dvla.library.model.Loan;
 import com.dvla.library.parser.ClosureXmlParser;
 import com.dvla.library.parser.LoanXmlParser;
@@ -29,12 +29,12 @@ public class LoanReportServiceTest {
 
 
     @Test
-    void shouldLoadclose() {
+    void shouldLoadClosure() {
 
-        List<Close> close =
-                closeParser.parse1("coding-part2.xml");
+        List<Closure> closure =
+                closeParser.parseClosure("coding-part2.xml");
 
-        assertEquals(0, close.size());
+        assertEquals(4, closure.size());
     }
 
     @Test

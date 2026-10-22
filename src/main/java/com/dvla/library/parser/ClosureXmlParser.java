@@ -1,6 +1,6 @@
 package com.dvla.library.parser;
 
-import com.dvla.library.model.Close;
+import com.dvla.library.model.Closure;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -14,9 +14,9 @@ import java.util.List;
 
 public class ClosureXmlParser {
 
-    public List<Close> parse1(String fileName) {
+    public List<Closure> parseClosure(String fileName) {
 
-        List<Close> close = new ArrayList<>();
+        List<Closure> closures = new ArrayList<>();
 
         try {
 
@@ -38,27 +38,28 @@ public class ClosureXmlParser {
                     Element element =
                             (Element) closureNodes.item(i);
 
-                    Close closure = new Close(
+                    Closure closure = new Closure(
 
-                            parseDate(
-                                    getValue(element, "date")),
+                            parseDate(element.getAttribute("date")),
                             getValue(element, "reason")
+
                     );
 
-                    if (isValidLoan(closure)) {
 
-                        close.add(closure);
+                    if (isValidClosure(closure)) {
+
+                        closures.add(closure);
 
                     } else {
 
                         System.err.println(
-                                "Skipping invalid loan record ");
+                                "Skipping invalid closure record");
                     }
 
                 } catch (Exception ex) {
 
                     System.err.println(
-                            "Skipping malformed loan record");
+                            "Skipping malformed closure record");
                 }
             }
 
@@ -69,17 +70,17 @@ public class ClosureXmlParser {
                     ex);
         }
 
-        return close;
+        return closures;
     }
 
 
-    private boolean isValidLoan(Close close) {
+    private boolean isValidClosure(Closure closure) {
 
-        if (close.date() == null) {
+        if (closure.date() == null) {
             return false;
         }
 
-        if (close.reason() == null || close.reason().isBlank()) {
+        if (closure.reason() == null || closure.reason().isBlank()) {
             return false;
         }
 
@@ -94,9 +95,14 @@ public class ClosureXmlParser {
             Element element,
             String tagName) {
 
-        return element
-                .getElementsByTagName(tagName)
-                .item(0)
+        NodeList nodes =
+                element.getElementsByTagName(tagName);
+
+        if (nodes.getLength() == 0) {
+            return null;
+        }
+
+        return nodes.item(0)
                 .getTextContent()
                 .trim();
     }
