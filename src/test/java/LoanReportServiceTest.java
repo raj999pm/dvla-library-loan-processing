@@ -2,13 +2,17 @@ import com.dvla.library.model.Closure;
 import com.dvla.library.model.Loan;
 import com.dvla.library.parser.ClosureXmlParser;
 import com.dvla.library.parser.LoanXmlParser;
+import com.dvla.library.service.FineCalculator;
 import com.dvla.library.service.LoanReportService;
+import com.dvla.library.service.OverdueCalculator;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class LoanReportServiceTest {
@@ -98,5 +102,105 @@ public class LoanReportServiceTest {
                         LocalDate.of(2026,4,21));
 
         assertEquals(0, result.size());
+    }
+
+    @Test
+    void shouldCalculateOverdueDays() {
+
+        List<Closure> closures =
+                closeParser.parseClosure("coding-part2.xml");
+
+        Loan loan = new Loan(
+                "L016",
+                "B001",
+                "John",
+                "Leicester",
+                "Book",
+                "Fiction",
+                LocalDate.of(2026, 5, 14),
+                LocalDate.of(2026, 5, 28),
+                null
+        );
+
+        OverdueCalculator calculator =
+                new OverdueCalculator();
+
+        int overdueDays =
+                calculator.calculateOverdueDays(
+                        loan,
+                        closures,
+                        LocalDate.of(2026,6,5));
+
+        assertEquals(7, overdueDays);
+    }
+
+
+    @Test
+    void shouldCalculateFine() {
+
+        List<Closure> closures =
+                closeParser.parseClosure("coding-part2.xml");
+
+        Loan loan = new Loan(
+                "L016",
+                "B001",
+                "John",
+                "Leicester",
+                "Book",
+                "Fiction",
+                LocalDate.of(2026, 5, 14),
+                LocalDate.of(2026, 5, 28),
+                null
+        );
+
+        FineCalculator calculator =
+                new FineCalculator();
+
+        double fine =
+                calculator.calculateFine(
+                        loan,
+                        closures,
+                        LocalDate.of(2026, 6, 5));
+
+        assertEquals(1.40, fine,0.001);
+    }
+
+
+    @Test
+    void shouldGroupLoansByGenre() {
+
+        List<Loan> loans =
+                parser.parse("coding-part1.xml");
+
+        Map<String, Long> genres =
+                loans.stream()
+                        .collect(Collectors.groupingBy(
+                                Loan::genre,
+                                Collectors.counting()));
+
+        assertFalse(genres.isEmpty());
+    }
+
+
+    @Test
+    void shouldCalculateAverageBranchLoans() {
+
+        List<Loan> loans =
+                parser.parse("coding-part1.xml");
+
+        Map<String, Long> branchCounts =
+                loans.stream()
+                        .collect(Collectors.groupingBy(
+                                Loan::branch,
+                                Collectors.counting()));
+
+        double average =
+                branchCounts.values()
+                        .stream()
+                        .mapToLong(Long::longValue)
+                        .average()
+                        .orElse(0);
+
+        assertTrue(average > 0);
     }
 }
