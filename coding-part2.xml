@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<closures>
+    <closure date="2026-05-04">
+        <reason>Early May bank holiday</reason>
+    </closure>
+    <closure date="2026-05-25">
+        <reason>Spring bank holiday</reason>
+    </closure>
+    <closure date="2026-05-26">
+        <reason>Staff training day</reason>
+    </closure>
+    <closure date="2026-06-01">
+        <reason>Building maintenance</reason>
+    </closure>
+</closures>

@@ -1,4 +1,6 @@
+import com.dvla.library.model.Close;
 import com.dvla.library.model.Loan;
+import com.dvla.library.parser.ClosureXmlParser;
 import com.dvla.library.parser.LoanXmlParser;
 import com.dvla.library.service.LoanReportService;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ public class LoanReportServiceTest {
 
 
     private final LoanXmlParser parser = new LoanXmlParser();
+    private final ClosureXmlParser closeParser = new ClosureXmlParser();
     private final LoanReportService service = new LoanReportService();
 
     @Test
@@ -22,6 +25,16 @@ public class LoanReportServiceTest {
                 parser.parse("coding-part1.xml");
 
         assertEquals(20, loans.size());
+    }
+
+
+    @Test
+    void shouldLoadclose() {
+
+        List<Close> close =
+                closeParser.parse1("coding-part2.xml");
+
+        assertEquals(0, close.size());
     }
 
     @Test

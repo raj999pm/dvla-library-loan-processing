@@ -1,6 +1,8 @@
 package com.dvla.library;
 
+import com.dvla.library.model.Close;
 import com.dvla.library.model.Loan;
+import com.dvla.library.parser.ClosureXmlParser;
 import com.dvla.library.parser.LoanXmlParser;
 import com.dvla.library.service.LoanReportService;
 
@@ -13,6 +15,10 @@ public class Application {
 
         LoanXmlParser parser =
                 new LoanXmlParser();
+
+        ClosureXmlParser parser2 = new ClosureXmlParser();
+
+        List<Close> close = parser2.parse1("coding-part2.xml");
 
         List<Loan> loans =
                 parser.parse("coding-part1.xml");
